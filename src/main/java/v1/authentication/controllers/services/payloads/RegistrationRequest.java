@@ -18,4 +18,7 @@ public class RegistrationRequest {
     @Email
     @Schema(required = true)
     public String email;
+
+    @Schema(required = true)
+    public String logo;
 }

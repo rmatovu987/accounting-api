@@ -2,7 +2,7 @@ package v1.authentication.controllers.services;
 
 import v1.authentication.controllers.services.payloads.RegistrationRequest;
 import v1.authentication.domains.Authenticator;
-import v1.business.domains.Business;
+import v1.authentication.domains.Business;
 
 import javax.enterprise.context.ApplicationScoped;
 import java.util.Random;
@@ -12,7 +12,7 @@ public class AuthService {
 
     public Authenticator register(RegistrationRequest request) {
 
-        Business business = new Business(request.businessName, request.address, request.contact, request.email);
+        Business business = new Business(request.businessName, request.address, request.contact, request.email, request.logo);
         business.persist();
 
         String api = randomString(5) + "." + randomString(15);

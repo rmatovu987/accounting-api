@@ -8,6 +8,7 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import v1.authentication.controllers.services.AuthService;
 import v1.authentication.controllers.services.payloads.RegistrationRequest;
 import v1.authentication.domains.Authenticator;
+import v1.statics.ResponseMessage;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;
@@ -32,6 +33,6 @@ public class AuthController {
     @Operation(summary="Registration", description="Register your business and get an api key to attach in your headers")
     @APIResponse(description = "Registered", responseCode = "200", content= @Content(schema = @Schema(implementation = Authenticator.class)))
     public Response register(RegistrationRequest request){
-        return Response.ok(service.register(request)).status(200).build();
+        return Response.ok(new ResponseMessage("Registration Successful!", service.register(request))).status(200).build();
     }
 }

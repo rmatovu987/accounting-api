@@ -1,9 +1,11 @@
-package v1.business.domains;
+package v1.authentication.domains;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 
+import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Lob;
 import javax.validation.constraints.Email;
 
 @Entity
@@ -22,13 +24,19 @@ public class Business extends PanacheEntity {
     @Column(nullable=false)
     public String contact;
 
+    @Lob
+    @JsonbTransient
+    @Column(nullable = false)
+    public String logo;
+
     public Business() {
     }
 
-    public Business(String businessName, String address, String contact, String email) {
+    public Business(String businessName, String address, String contact, String email, String logo) {
         this.businessName = businessName;
         this.address = address;
         this.contact = contact;
         this.email = email;
+        this.logo = logo;
     }
 }
