@@ -15,7 +15,7 @@ public class GeneralPDFMethods {
 
 	public static void addBusinessInformation(Business business, Document document) {
 		byte[] img = null;
-		if (business.logo == null) {
+		if (business.logo == null || business.logo.equals("")) {
 			img = Base64.decodeBase64(Constants.defaultLogo);
 		} else {
 			img = Base64.decodeBase64(business.logo);
@@ -29,7 +29,7 @@ public class GeneralPDFMethods {
 		}
 		try {
 			assert image != null;
-			image.scalePercent(50f);
+			image.scalePercent(20f);
 			PdfPTable tab = new PdfPTable(2);
 			tab.setHorizontalAlignment(0);
 			tab.setWidthPercentage(100.0f);

@@ -23,9 +23,6 @@ public class JournalEntryRequest {
     public Long ledgerId;
 
     @Schema(required = true, example = "1")
-    public Long branchId;
-
-    @Schema(required = true, example = "1")
     public Long journalId;
 
     public Boolean confirmation = Boolean.FALSE;
