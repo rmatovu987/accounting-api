@@ -22,166 +22,110 @@ public class CommonLedgerQuerries {
     @Inject
     AgroalDataSource dataSource;
 
-    @Inject
+//    @Inject
 //    changesinequitystatement service;
 
     public BigDecimal getBalance(Ledger ledger) {
-        BigDecimal amount = new BigDecimal("0");
-        Connection connection = null;
-        try {
-            connection = dataSource.getConnection();
-
-            Statement st = connection.createStatement();
-            ResultSet set = st.executeQuery("select"
-                    + " sum(a.debit + a.credit) as amount"
-                    + " from JournalEntry a"
-                    + " inner join Journal d on a.journal_id=d.id"
-                    + " where a.ledger_id = " + ledger.id
-                    + " and d.status='" + _StatusTypes_Enum.PUBLISHED + "'");
-
+        BigDecimal amount = BigDecimal.ZERO;
+        String qry = "select"
+                + " sum(a.debit + a.credit) as amount"
+                + " from JournalEntry a"
+                + " inner join Journal d on a.journal_id=d.id"
+                + " where a.ledger_id = " + ledger.id
+                + " and d.status='" + _StatusTypes_Enum.PUBLISHED + "'";
+        try (
+                Connection connection = dataSource.getConnection();
+                Statement st = connection.createStatement();
+                ResultSet set = st.executeQuery(qry);
+        ) {
             while (set.next()) {
                 if (set.getBigDecimal("amount") != null) {
                     amount = amount.add(set.getBigDecimal("amount"));
                 }
             }
-            st.close();
-            set.close();
 
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-        } catch (Exception se) {
-            se.printStackTrace();
-        } finally {
-
-            try {
-                if (connection != null) {
-                    connection.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-
         }
         return amount;
     }
 
     public BigDecimal getBalanceByDate(Long date, Ledger ledger) {
         BigDecimal amount = new BigDecimal("0");
-        Connection connection = null;
-        try {
-            connection = dataSource.getConnection();
-
-            Statement st = connection.createStatement();
-            ResultSet set = st.executeQuery("select"
-                    + " sum(a.debit + a.credit) as amount"
-                    + " from JournalEntry a"
-                    + " inner join Journal d on a.journal_id=d.id"
-                    + " where a.ledger_id = " + ledger.id
-                    + " and d.status='" + _StatusTypes_Enum.PUBLISHED + "'"
-                    + " and a.date <= " + date);
-
+        String qry = "select"
+                + " sum(a.debit + a.credit) as amount"
+                + " from JournalEntry a"
+                + " inner join Journal d on a.journal_id=d.id"
+                + " where a.ledger_id = " + ledger.id
+                + " and d.status='" + _StatusTypes_Enum.PUBLISHED + "'"
+                + " and a.date <= " + date;
+        try (
+                Connection connection = dataSource.getConnection();
+                Statement st = connection.createStatement();
+                ResultSet set = st.executeQuery(qry);
+                ) {
             while (set.next()) {
                 if (set.getBigDecimal("amount") != null) {
                     amount = amount.add(set.getBigDecimal("amount"));
                 }
             }
-            st.close();
-            set.close();
 
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-        } catch (Exception se) {
-            se.printStackTrace();
-        } finally {
-
-            try {
-                if (connection != null) {
-                    connection.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-
         }
         return amount;
     }
 
     public BigDecimal getBalanceByDateBranch(Long date, Ledger ledger, Business business) {
-
-
         BigDecimal amount = BigDecimal.ZERO;
-        Connection connection = null;
-        try {
-            connection = dataSource.getConnection();
-
-            String qry = "select "
-                    + "sum(a.debit+a.credit) as amount "
-                    + "from JournalEntry a "
-                    + "inner join Journal b on a.journal_id=b.id "
-                    + "where a.ledger_id=" + ledger.id
-                    + " and b.status='" + _StatusTypes_Enum.PUBLISHED
-                    + "' and a.date <= " + date
-                    + " and a.business_id = "+business.id;
-
-            Statement st = connection.createStatement();
-            ResultSet set = st.executeQuery(qry);
-
+        String qry = "select "
+                + "sum(a.debit+a.credit) as amount "
+                + "from JournalEntry a "
+                + "inner join Journal b on a.journal_id=b.id "
+                + "where a.ledger_id=" + ledger.id
+                + " and b.status='" + _StatusTypes_Enum.PUBLISHED
+                + "' and a.date <= " + date
+                + " and a.business_id = " + business.id;
+        try (
+                Connection connection = dataSource.getConnection();
+                Statement st = connection.createStatement();
+                ResultSet set = st.executeQuery(qry);
+                ){
             while (set.next()) {
                 if (set.getBigDecimal("amount") != null) {
                     amount = amount.add(set.getBigDecimal("amount"));
                 }
-
             }
-            st.close();
-            set.close();
-
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-
-            try {
-                if (connection != null) {
-                    connection.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-
         }
         return amount;
     }
 
     public COAbalance getBalanceChart(Ledger ledger, Business business) {
 
-        Connection connection = null;
-
         BigDecimal realValue = BigDecimal.ZERO;
         BigDecimal feckValue = BigDecimal.ZERO;
 
-        try {
-            connection = dataSource.getConnection();
+        String qry = "select "
+                + "sum(a.debit+a.credit) as amount "
+                + "from JournalEntry a "
+                + "inner join Journal b on a.journal_id=b.id "
+                + "where a.ledger_id=" + ledger.id
+                + " and b.status='" + _StatusTypes_Enum.PUBLISHED
+                + "'"
+                + "and a.business_id = " + business.id;
 
-            /// fetch the real value of the ledger
-            Statement stmt = connection.createStatement();
-            String qry = "select "
-                    + "sum(a.debit+a.credit) as amount "
-                    + "from JournalEntry a "
-                    + "inner join Journal b on a.journal_id=b.id "
-                    + "where a.ledger_id=" + ledger.id
-                    + " and b.status='" + _StatusTypes_Enum.PUBLISHED
-                    + "'"
-                    + "and a.business_id = "+business.id;
-
-            ResultSet rs = stmt.executeQuery(qry);
-
+        try (
+                Connection connection = dataSource.getConnection();
+                Statement st = connection.createStatement();
+                ResultSet rs = st.executeQuery(qry);
+                ) {
             while (rs.next()) {
                 if (rs.getBigDecimal("amount") != null) {
                     realValue = rs.getBigDecimal("amount");
                 }
             }
-            rs.close();
-            stmt.close();
-
             /// fetch the feck value of the ledger
             if (ledger.hasSubAccounts) {
                 Statement stmt1 = connection.createStatement();
@@ -191,7 +135,7 @@ public class CommonLedgerQuerries {
                         + "inner join Journal b on a.journal_id=b.id " + "inner join Ledger c on a.ledger_id=c.id "
                         + "where " + "(c.id='" + ledger.id + "' or c.code like '" + ledger.code + "%')"
                         + " and  b.status='" + _StatusTypes_Enum.PUBLISHED + "'"
-                        + "and a.business_id = "+business.id;
+                        + "and a.business_id = " + business.id;
 
                 ResultSet rs1 = stmt1.executeQuery(qry1);
                 while (rs1.next()) {
@@ -209,16 +153,6 @@ public class CommonLedgerQuerries {
             }
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-
-            try {
-                if (connection != null) {
-                    connection.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-
         }
 
         return new COAbalance(realValue, feckValue);

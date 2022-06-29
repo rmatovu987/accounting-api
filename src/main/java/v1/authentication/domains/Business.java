@@ -11,7 +11,7 @@ import javax.validation.constraints.Email;
 @Entity
 public class Business extends PanacheEntity {
 
-    @Column(nullable=false)
+    @Column(nullable=false, unique = true)
     public String businessName;
 
     @Column(nullable=false)
@@ -38,5 +38,9 @@ public class Business extends PanacheEntity {
         this.contact = contact;
         this.email = email;
         this.logo = logo;
+    }
+
+    public static Business findByName(String name){
+        return find("businessName", name).firstResult();
     }
 }

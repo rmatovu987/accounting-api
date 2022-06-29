@@ -2,13 +2,11 @@ package v1.authentication.domains;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 
 @Entity
 public class Authenticator extends PanacheEntity {
+    @Lob
     @Column(nullable=false)
     public String apiKey;
 
@@ -26,5 +24,9 @@ public class Authenticator extends PanacheEntity {
 
     public static Authenticator findByKey(String key){
         return find("apiKey", key).firstResult();
+    }
+
+    public static Authenticator findByName(String name){
+        return find("business.businessName", name).firstResult();
     }
 }

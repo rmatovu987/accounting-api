@@ -39,38 +39,44 @@ public class CustomAwareJWTAuthMechanism implements HttpAuthenticationMechanism 
 
     protected static final String AUTHORIZATION_HEADER = "Authorization";
 
+    @Inject
+    JwtUtils jwtUtils;
+
     @Override
     public Uni<SecurityIdentity> authenticate(RoutingContext context, IdentityProviderManager identityProviderManager) {
 
         HttpServerRequest request = context.request();
+        String jwt = parseJwt(request);
 
-        String openHeaderAuth = request.getHeader(AUTHORIZATION_HEADER);
+        if (request.path().contains("authentication")) {
 
-        if (StringUtils.hasText(openHeaderAuth)) {
+            return Uni.createFrom().optional(Optional.empty());
 
-//            String key = openHeaderAuth.substring(11, openHeaderAuth.length());
-            String key = openHeaderAuth;
+        } else {
+            if (jwt != null) {
+                if (jwtUtils.validateJwtToken(jwt, request)) {
 
-            if (validateKey(key)) {
-                QuarkusSecurityIdentity identity = QuarkusSecurityIdentity.builder()
-                        .setPrincipal(new QuarkusPrincipal(key)).build();
+                    String business = jwtUtils.getBusinessFromJwtToken(jwt);
 
-                return Uni.createFrom().item(identity);
+                    QuarkusSecurityIdentity identity = QuarkusSecurityIdentity.builder()
+                            .setPrincipal(new QuarkusPrincipal(business)).addRoles(new HashSet<>()).build();
+
+                    return Uni.createFrom().item(identity);
+
+                }
+
+                return Uni.createFrom().failure(new AuthenticationFailedException());
+
             }
 
+            return Uni.createFrom().failure(new AuthenticationFailedException());
         }
-        return Uni.createFrom().failure(new AuthenticationFailedException());
-    }
-
-    private boolean validateKey(String key) {
-        Authenticator auth = Authenticator.findByKey(key);
-        return auth != null;
     }
 
     @Override
     public Uni<ChallengeData> getChallenge(RoutingContext context) {
         ChallengeData result = new ChallengeData(HttpResponseStatus.UNAUTHORIZED.code(),
-                HttpHeaderNames.WWW_AUTHENTICATE, "{token}");
+                HttpHeaderNames.WWW_AUTHENTICATE, "Bearer {token}");
         return Uni.createFrom().item(result);
     }
 
@@ -79,4 +85,13 @@ public class CustomAwareJWTAuthMechanism implements HttpAuthenticationMechanism 
         return Collections.singleton(TokenAuthenticationRequest.class);
     }
 
+    private String parseJwt(HttpServerRequest request) {
+        String headerAuth = request.getHeader(AUTHORIZATION_HEADER);
+
+        if (StringUtils.hasText(headerAuth)) {
+            return headerAuth.substring(7);
+        }
+
+        return null;
+    }
 }

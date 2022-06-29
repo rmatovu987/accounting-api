@@ -27,7 +27,7 @@ import java.security.Principal;
 @Path("journals")
 @Produces("application/json")
 @Consumes("application/json")
-@Tag(name = "Accounting - Journals", description = "Manage journals")
+@Tag(name = "Journals", description = "Manage journals")
 @SecurityRequirement(name = "Authorization")
 public class JournalController {
 
@@ -47,7 +47,7 @@ public class JournalController {
 		Principal caller = ctx.getUserPrincipal();
 		String user = caller == null ? "anonymous" : caller.getName();
 
-		Authenticator auth = Authenticator.findByKey(user);
+		Authenticator auth = Authenticator.findByName(user);
 		if (auth != null) {
 			return Response
 					.ok(new ResponseMessage("Saved successfully!", service.createJournal(request, auth.business)))
@@ -66,7 +66,7 @@ public class JournalController {
 		Principal caller = ctx.getUserPrincipal();
 		String user = caller == null ? "anonymous" : caller.getName();
 
-		Authenticator auth = Authenticator.findByKey(user);
+		Authenticator auth = Authenticator.findByName(user);
 		if (auth != null) {
 			return Response.ok(new ResponseMessage("Updated successfully!",
 					service.updateJournalDetails(id, request, auth.business))).build();
@@ -85,7 +85,7 @@ public class JournalController {
 		Principal caller = ctx.getUserPrincipal();
 		String user = caller == null ? "anonymous" : caller.getName();
 
-		Authenticator auth = Authenticator.findByKey(user);
+		Authenticator auth = Authenticator.findByName(user);
 		if (auth != null) {
 			return Response
 					.ok(new ResponseMessage("Approved successfully!", service.approveJournal(id, auth.business)))
@@ -105,7 +105,7 @@ public class JournalController {
 		Principal caller = ctx.getUserPrincipal();
 		String user = caller == null ? "anonymous" : caller.getName();
 
-		Authenticator auth = Authenticator.findByKey(user);
+		Authenticator auth = Authenticator.findByName(user);
 		if (auth != null) {
 			return Response
 					.ok(new ResponseMessage("Declined successfully!", service.declineJournal(id, auth.business)))
@@ -125,7 +125,7 @@ public class JournalController {
 		Principal caller = ctx.getUserPrincipal();
 		String user = caller == null ? "anonymous" : caller.getName();
 
-		Authenticator auth = Authenticator.findByKey(user);
+		Authenticator auth = Authenticator.findByName(user);
 		if (auth != null) {
 			return Response
 					.ok(new ResponseMessage("Published successfully!", service.publishJournal(id, auth.business)))
@@ -145,7 +145,7 @@ public class JournalController {
 		Principal caller = ctx.getUserPrincipal();
 		String user = caller == null ? "anonymous" : caller.getName();
 
-		Authenticator auth = Authenticator.findByKey(user);
+		Authenticator auth = Authenticator.findByName(user);
 		if (auth != null) {
 			return Response
 					.ok(new ResponseMessage("Rejected successfully!", service.rejectJournal(id, auth.business)))
@@ -165,7 +165,7 @@ public class JournalController {
 		Principal caller = ctx.getUserPrincipal();
 		String user = caller == null ? "anonymous" : caller.getName();
 
-		Authenticator auth = Authenticator.findByKey(user);
+		Authenticator auth = Authenticator.findByName(user);
 		if (auth != null) {
 			return Response
 					.ok(new ResponseMessage("Successfully undeclined", service.undeclineJournal(id, auth.business)))
@@ -185,7 +185,7 @@ public class JournalController {
 		Principal caller = ctx.getUserPrincipal();
 		String user = caller == null ? "anonymous" : caller.getName();
 
-		Authenticator auth = Authenticator.findByKey(user);
+		Authenticator auth = Authenticator.findByName(user);
 		if (auth != null) {
 			return Response
 					.ok(new ResponseMessage("Successfully unrejected!", service.unrejectJournal(id, auth.business)))
@@ -204,7 +204,7 @@ public class JournalController {
 		Principal caller = ctx.getUserPrincipal();
 		String user = caller == null ? "anonymous" : caller.getName();
 
-		Authenticator auth = Authenticator.findByKey(user);
+		Authenticator auth = Authenticator.findByName(user);
 		if (auth != null) {
 			return Response.ok(new ResponseMessage("Successful!", service.getJournalDetails(id)))
 					.build();
@@ -223,7 +223,7 @@ public class JournalController {
 		Principal caller = ctx.getUserPrincipal();
 		String user = caller == null ? "anonymous" : caller.getName();
 
-		Authenticator auth = Authenticator.findByKey(user);
+		Authenticator auth = Authenticator.findByName(user);
 		if (auth != null) {
 			return Response.ok(new ResponseMessage("Fetched successfully!",
 					service.getJournals(startDate, endDate, isSystemGenerated, reference, status, auth.business)))
@@ -243,7 +243,7 @@ public class JournalController {
 		Principal caller = ctx.getUserPrincipal();
 		String user = caller == null ? "anonymous" : caller.getName();
 
-		Authenticator auth = Authenticator.findByKey(user);
+		Authenticator auth = Authenticator.findByName(user);
 		if (auth != null) {
 			return Response.ok(new ResponseMessage("Fetched successfully!",
 					ledgerService.getPostable(auth.business, categoryId))).build();
@@ -260,7 +260,7 @@ public class JournalController {
 		Principal caller = ctx.getUserPrincipal();
 		String user = caller == null ? "anonymous" : caller.getName();
 
-		Authenticator auth = Authenticator.findByKey(user);
+		Authenticator auth = Authenticator.findByName(user);
 		if (auth != null) {
 			return Response.ok(new ResponseMessage("Fetched successfully!", service.getJournalTypes())).build();
 		}
@@ -276,7 +276,7 @@ public class JournalController {
 		Principal caller = ctx.getUserPrincipal();
 		String user = caller == null ? "anonymous" : caller.getName();
 
-		Authenticator auth = Authenticator.findByKey(user);
+		Authenticator auth = Authenticator.findByName(user);
 		if (auth != null) {
 			return Response.ok(new ResponseMessage("Fetched successfully!", service.getJournalStatuses())).build();
 		}
@@ -292,7 +292,7 @@ public class JournalController {
 		Principal caller = ctx.getUserPrincipal();
 		String user = caller == null ? "anonymous" : caller.getName();
 
-		Authenticator auth = Authenticator.findByKey(user);
+		Authenticator auth = Authenticator.findByName(user);
 		if (auth != null) {
 			return Response
 					.ok(new ResponseMessage("Deleted successfully!", service.deleteJournal(id, auth.business)))

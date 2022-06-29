@@ -3,36 +3,31 @@ package v1.authentication.controllers.services;
 import v1.authentication.controllers.services.payloads.RegistrationRequest;
 import v1.authentication.domains.Authenticator;
 import v1.authentication.domains.Business;
+import v1.configurations.security.JwtUtils;
 
 import javax.enterprise.context.ApplicationScoped;
-import java.util.Random;
+import javax.inject.Inject;
+import javax.ws.rs.WebApplicationException;
 
 @ApplicationScoped
 public class AuthService {
 
+    @Inject
+    JwtUtils jwtUtils;
+
     public Authenticator register(RegistrationRequest request) {
+
+        Business exists = Business.findByName(request.businessName);
+        if(exists != null) throw new WebApplicationException("Business name already taken!", 409);
 
         Business business = new Business(request.businessName, request.address, request.contact, request.email, request.logo);
         business.persist();
 
-        String api = randomString(5) + "." + randomString(15);
+        String api = jwtUtils.generateJwtToken(business);
 
         Authenticator auth = new Authenticator(api, business);
         auth.persist();
 
         return auth;
-    }
-
-    private String randomString(int length) {
-
-        int leftLimit = 97; // letter 'a'
-        int rightLimit = 122; // letter 'z'
-        StringBuilder buffer = new StringBuilder(length);
-        for (int i = 0; i < length; i++) {
-            int randomLimitedInt = leftLimit + (int) (new Random().nextFloat() * (rightLimit - leftLimit + 1));
-            buffer.append((char) randomLimitedInt);
-        }
-
-        return buffer.toString();
     }
 }

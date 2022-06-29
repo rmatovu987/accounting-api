@@ -50,7 +50,7 @@ public class LedgerController {
         Principal caller = ctx.getUserPrincipal();
         String user = caller == null ? "anonymous" : caller.getName();
 
-        Authenticator auth = Authenticator.findByKey(user);
+        Authenticator auth = Authenticator.findByName(user);
         if (auth != null) {
             return Response.ok(new ResponseMessage("Ledger created!",
                     service.saveLedger(request, auth.business))).build();
@@ -70,7 +70,7 @@ public class LedgerController {
         Principal caller = ctx.getUserPrincipal();
         String user = caller == null ? "anonymous" : caller.getName();
 
-        Authenticator auth = Authenticator.findByKey(user);
+        Authenticator auth = Authenticator.findByName(user);
         if (auth != null) {
             return Response.ok(new ResponseMessage("Ledger updated",
                     service.updateLedger(id, request, auth.business))).build();
@@ -88,7 +88,7 @@ public class LedgerController {
         Principal caller = ctx.getUserPrincipal();
         String user = caller == null ? "anonymous" : caller.getName();
 
-        Authenticator auth = Authenticator.findByKey(user);
+        Authenticator auth = Authenticator.findByName(user);
         if (auth != null) {
             return Response.ok(new ResponseMessage("Ledger details fetched",
                     service.getDetails(id))).build();
@@ -106,7 +106,7 @@ public class LedgerController {
         Principal caller = ctx.getUserPrincipal();
         String user = caller == null ? "anonymous" : caller.getName();
 
-        Authenticator auth = Authenticator.findByKey(user);
+        Authenticator auth = Authenticator.findByName(user);
         if (auth != null) {
             return Response.ok(new ResponseMessage("Successfully fetched!",
                     service.getChart(auth.business, categoryId))).build();
@@ -124,7 +124,7 @@ public class LedgerController {
         Principal caller = ctx.getUserPrincipal();
         String user = caller == null ? "anonymous" : caller.getName();
 
-        Authenticator auth = Authenticator.findByKey(user);
+        Authenticator auth = Authenticator.findByName(user);
         if (auth != null) {
             return Response.ok(new ResponseMessage("Successfully fetched!",
                     service.getPostable(auth.business, categoryId))).build();
@@ -142,7 +142,7 @@ public class LedgerController {
         Principal caller = ctx.getUserPrincipal();
         String user = caller == null ? "anonymous" : caller.getName();
 
-        Authenticator auth = Authenticator.findByKey(user);
+        Authenticator auth = Authenticator.findByName(user);
         if (auth != null) {
             return Response.ok(new ResponseMessage("Successfully fetched!",
                     service.getLedgerHistory(id, startDate, endDate, auth.business))).build();
@@ -159,7 +159,7 @@ public class LedgerController {
         Principal caller = ctx.getUserPrincipal();
         String user = caller == null ? "anonymous" : caller.getName();
 
-        Authenticator auth = Authenticator.findByKey(user);
+        Authenticator auth = Authenticator.findByName(user);
         if (auth != null) {
             Ledger ledger = Ledger.findById(id);
             if (ledger == null)
@@ -179,7 +179,7 @@ public class LedgerController {
         Principal caller = ctx.getUserPrincipal();
         String user = caller == null ? "anonymous" : caller.getName();
 
-        Authenticator auth = Authenticator.findByKey(user);
+        Authenticator auth = Authenticator.findByName(user);
         if (auth != null) {
             service.deleteOne(id);
             return Response.ok(new ResponseMessage("Successfully deleted!")).build();

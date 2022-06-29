@@ -68,13 +68,12 @@ public class JournalEntryService {
         if (ledger == null)
             throw new WebApplicationException("Invalid ledger selected!");
 
-        JournalEntry journalEntry = journalEntry1;
-        journalEntry.debit = DebitCreditSigns.debit(request.debit, ledger.type);
-        journalEntry.credit = DebitCreditSigns.credit(request.credit, ledger.type);
-        journalEntry.ledger = ledger;
-        journalEntry.notes = request.notes;
+        journalEntry1.debit = DebitCreditSigns.debit(request.debit, ledger.type);
+        journalEntry1.credit = DebitCreditSigns.credit(request.credit, ledger.type);
+        journalEntry1.ledger = ledger;
+        journalEntry1.notes = request.notes;
 
-        return journalEntry;
+        return journalEntry1;
     }
 
     /**
@@ -123,11 +122,9 @@ public class JournalEntryService {
         if (journalEntry == null)
             throw new WebApplicationException("Invalid journalEntry selected", 404);
 
-        JournalEntry journalEntry1 = journalEntry;
-
         journalEntry.delete();
 
-        return journalEntry1;
+        return journalEntry;
     }
 
 }
