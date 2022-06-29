@@ -82,7 +82,7 @@ public class Ledger extends PanacheEntity {
         this.description = description;
         this.parentLedger = parentLedger;
         this.business = business;
-        this.systemName=System.currentTimeMillis()+"";
+        this.systemName = System.currentTimeMillis() + "";
 
         /// set
         this.isSystemGenerated = Boolean.FALSE;
@@ -127,7 +127,6 @@ public class Ledger extends PanacheEntity {
                   Boolean isSystemGenerated, Boolean isSupaAccount, Boolean hasSubAccounts, Boolean showOnChart, Boolean isPostable,
                   String type, Boolean isContra, Ledger contraLedger, Ledger parentLedger, Ledger category, Business business) {
         this.name = name;
-        this.systemName = systemName;
         this.description = description;
         this.isCategory = isCategory;
         this.isSystemGenerated = isSystemGenerated;
@@ -135,13 +134,21 @@ public class Ledger extends PanacheEntity {
         this.hasSubAccounts = hasSubAccounts;
         this.showOnChart = showOnChart;
         this.isPostable = isPostable;
-        this.type = type;
+
         this.isContra = isContra;
         this.contraLedger = contraLedger;
         this.parentLedger = parentLedger;
         this.category = category;
         this.business = business;
-        this.code = code;
+
+        if (systemName != null) this.systemName = systemName;
+        else this.systemName = this.name.toUpperCase();
+
+        if (code != null) this.code = code;
+        else this.code = generateCode(parentLedger, business);
+
+        if (type != null) this.type = type;
+        else this.type = parentLedger.type;
     }
 
     public static Ledger getLedgerBySystemName(String systemName, Business business) {

@@ -11,13 +11,10 @@ import io.quarkus.security.runtime.QuarkusPrincipal;
 import io.quarkus.security.runtime.QuarkusSecurityIdentity;
 import io.quarkus.vertx.http.runtime.security.ChallengeData;
 import io.quarkus.vertx.http.runtime.security.HttpAuthenticationMechanism;
-import io.quarkus.vertx.http.runtime.security.HttpCredentialTransport;
-import io.smallrye.jwt.auth.principal.JWTAuthContextInfo;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.http.HttpServerRequest;
 import io.vertx.ext.web.RoutingContext;
 import org.springframework.util.StringUtils;
-import v1.authentication.domains.Authenticator;
 
 import javax.annotation.Priority;
 import javax.enterprise.context.ApplicationScoped;
